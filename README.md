@@ -4,7 +4,12 @@ Repositório destinado ao projeto da cadeira de Programação Imperativa e Funci
 
 ## Nossa equipe
 
+<details>
+  <summary>Clique para expandir</summary>
+
 - Maria Luisa Albuquerque (@malualbuquerqueb)
 - Bruno Oliveira (@Bruno-of)
 - Pedro Augusto Calazans (@pedrooojh)
 - Luis Filipe Brigido (@LFilipeTeles)
+
+</details>
