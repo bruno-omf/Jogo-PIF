@@ -14,3 +14,6 @@ void timerUpdateTimer(int valueMilliSec);
 int timerTimeOver();
 
 void timerPrint();
+
+int getTimeDiff();  // Declaração da função para obter a diferença de tempo em milissegundos
+

@@ -1,88 +1,45 @@
-/**
- * main.h
- * Created on Aug, 23th 2023
- * Author: Tiago Barros
- * Based on "From C to C++ course - 2002"
-*/
-
+#include <stdio.h>
 #include <string.h>
+#include "ranking.h"
+#include "jogo.h"
 
-#include "screen.h"
-#include "keyboard.h"
-#include "timer.h"
+int main() {
+    char nomeJogador[MAX_NOME];
+    int tempoTotal = 0;
 
-int x = 34, y = 12;
-int incX = 1, incY = 1;
+    // Inicializa o ranking antes de começar o jogo
+    inicializarRanking();
 
-void printHello(int nextX, int nextY)
-{
-    screenSetColor(CYAN, DARKGRAY);
-    screenGotoxy(x, y);
-    printf("           ");
-    x = nextX;
-    y = nextY;
-    screenGotoxy(x, y);
-    printf("Hello World");
-}
-
-void printKey(int ch)
-{
-    screenSetColor(YELLOW, DARKGRAY);
-    screenGotoxy(35, 22);
-    printf("Key code :");
-
-    screenGotoxy(34, 23);
-    printf("            ");
+    printf("Bem-vindo ao Labirinto!!\n\n");
     
-    if (ch == 27) screenGotoxy(36, 23);
-    else screenGotoxy(39, 23);
+    // Exibe o ranking atual antes de pedir o nome do jogador
+    exibirRanking();
 
-    printf("%d ", ch);
-    while (keyhit())
-    {
-        printf("%d ", readch());
-    }
-}
+    printf("\nDigite seu nome para iniciar: ");
+    fgets(nomeJogador, MAX_NOME, stdin);
+    nomeJogador[strcspn(nomeJogador, "\n")] = '\0';
 
-int main() 
-{
-    static int ch = 0;
+    Jogador jogadorAtual;
+    strcpy(jogadorAtual.nome, nomeJogador);
 
-    screenInit(1);
-    keyboardInit();
-    timerInit(50);
+    // Inicia o jogo e soma os tempos das fases
+    printf("\nFase 1:\n");
+    tempoTotal += executarFase(1);
 
-    printHello(x, y);
-    screenUpdate();
+    printf("Fase 2:\n");
+    tempoTotal += executarFase(2);
 
-    while (ch != 10) //enter
-    {
-        // Handle user input
-        if (keyhit()) 
-        {
-            ch = readch();
-            printKey(ch);
-            screenUpdate();
-        }
+    printf("Fase 3:\n");
+    tempoTotal += executarFase(3);
 
-        // Update game state (move elements, verify collision, etc)
-        if (timerTimeOver() == 1)
-        {
-            int newX = x + incX;
-            if (newX >= (MAXX -strlen("Hello World") -1) || newX <= MINX+1) incX = -incX;
-            int newY = y + incY;
-            if (newY >= MAXY-1 || newY <= MINY+1) incY = -incY;
+    // Atualiza o tempo total do jogador e insere no ranking
+    jogadorAtual.tempo = tempoTotal;
+    atualizarRanking(jogadorAtual);
 
-            printKey(ch);
-            printHello(newX, newY);
+    printf("\nParabéns, %s! Você completou o jogo em %d segundos!\n", jogadorAtual.nome, tempoTotal);
 
-            screenUpdate();
-        }
-    }
-
-    keyboardDestroy();
-    screenDestroy();
-    timerDestroy();
+    // Exibe o ranking atualizado ao final do jogo
+    exibirRanking();
 
     return 0;
 }
