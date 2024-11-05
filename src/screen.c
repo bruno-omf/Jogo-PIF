@@ -1,87 +1,151 @@
-/**
- * screen.c
- * Created on Aug, 23th 2023
- * Author: Tiago Barros
- * Based on "From C to C++ course - 2002"
-*/
-
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <time.h>
+#include <unistd.h>  
 #include "screen.h"
+#include "keyboard.h"
 
-void screenDrawBorders() 
-{
-    char hbc = BOX_HLINE;
-    char vbc = BOX_VLINE;
-    
-    screenClear();
-    screenBoxEnable();
-    
-    screenGotoxy(MINX, MINY);
-    printf("%c", BOX_UPLEFT);
+// Definindo os labirintos
+char labirinto1[N][M] = {
+    "##########",
+    "#P       #",
+    "# ###### #",
+    "# #    # #",
+    "# # ## # #",
+    "# #    # #",
+    "# ###### #",
+    "#        #",
+    "#      E #",
+    "##########"
+};
 
-    for (int i=MINX+1; i<MAXX; i++)
-    {
-        screenGotoxy(i, MINY);
-        printf("%c", hbc);
+char labirinto2[N][M] = {
+    "##########",
+    "#P     # #",
+    "### #### #",
+    "#   #    #",
+    "# ### ## #",
+    "#   #    #",
+    "# ### ####",
+    "#        #",
+    "#      E #",
+    "##########"
+};
+
+char labirinto3[N][M] = {
+    "##########",
+    "#P     # #",
+    "### ##   #",
+    "#   #    #",
+    "##### ## #",
+    "#   #    #",
+    "# #### ###",
+    "#        #",
+    "#      E #",
+    "##########"
+};
+
+// Função para obter o labirinto correspondente à fase
+char (*obterLabirinto(int fase))[M] {
+    switch (fase) {
+        case 1: return labirinto1;
+        case 2: return labirinto2;
+        case 3: return labirinto3;
+        default: return NULL;
     }
-    screenGotoxy(MAXX, MINY);
-    printf("%c", BOX_UPRIGHT);
-
-    for (int i=MINY+1; i<MAXY; i++)
-    {
-        screenGotoxy(MINX, i);
-        printf("%c", vbc);
-        screenGotoxy(MAXX, i);
-        printf("%c", vbc);
-    }
-
-    screenGotoxy(MINX, MAXY);
-    printf("%c", BOX_DWNLEFT);
-    for (int i=MINX+1; i<MAXX; i++)
-    {
-        screenGotoxy(i, MAXY);
-        printf("%c", hbc);
-    }
-    screenGotoxy(MAXX, MAXY);
-    printf("%c", BOX_DWNRIGHT);
-
-    screenBoxDisable();
-    
 }
 
-void screenInit(int drawBorders)
-{
-    screenClear();
-    if (drawBorders) screenDrawBorders();
-    screenHomeCursor();
-    screenHideCursor();
+// Função para exibir o labirinto
+void exibirLabirinto(char labirinto[N][M]) {
+    system("clear");
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < M; j++) {
+            printf("%c", labirinto[i][j]);
+        }
+        printf("\n");
+    }
 }
 
-void screenDestroy()
-{
-    printf("%s[0;39;49m", ESC); // Reset colors
-    screenSetNormal();
-    screenClear();
-    screenHomeCursor();
-    screenShowCursor();
+// Função para encontrar a posição inicial do jogador
+void encontrarPosicaoInicial(char labirinto[N][M], int *x, int *y) {
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < M; j++) {
+            if (labirinto[i][j] == 'P') {
+                *x = i;
+                *y = j;
+                return;
+            }
+        }
+    }
 }
 
-void screenGotoxy(int x, int y)
-{
-    x = ( x<0 ? 0 : x>=MAXX ? MAXX-1 : x);
-    y = ( y<0 ? 0 : y>MAXY ? MAXY : y);
-    
-    printf("%s[f%s[%dB%s[%dC", ESC, ESC, y, ESC, x);
+// Função para mover o jogador com base nas teclas do teclado
+void moverJogador(char labirinto[N][M], int *x, int *y, int tecla) {
+    int novoX = *x;
+    int novoY = *y;
+
+    if (tecla == KEY_UP) novoX--;
+    else if (tecla == KEY_DOWN) novoX++;
+    else if (tecla == KEY_LEFT) novoY--;
+    else if (tecla == KEY_RIGHT) novoY++;
+
+    if (labirinto[novoX][novoY] == ' ' || labirinto[novoX][novoY] == 'E') {
+        if (labirinto[*x][*y] != 'E') {
+            labirinto[*x][*y] = ' ';
+        }
+        *x = novoX;
+        *y = novoY;
+        labirinto[*x][*y] = 'P';
+    }
 }
 
-void screenSetColor( screenColor fg, screenColor bg)
-{
-    char atr[] = "[0;";
-
-    if ( fg > LIGHTGRAY )
-    {
-        atr[1] = '1';
-		fg -= 8;
+// Função completa para executar uma fase do jogo
+int executarFase(int fase) {
+    char (*labirinto)[M] = obterLabirinto(fase);
+    if (labirinto == NULL) {
+        printf("Fase inválida!\n");
+        return 0;
     }
 
-    printf("%s%s%d;%dm", ESC, atr, fg+30, bg+40);
+    int saidaX = -1, saidaY = -1;
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < M; j++) {
+            if (labirinto[i][j] == 'E') {
+                saidaX = i;
+                saidaY = j;
+                break;
+            }
+        }
+    }
+
+    int x, y;
+    encontrarPosicaoInicial(labirinto, &x, &y);
+
+    configurarTerminal(1); // Ativa o modo não canônico para capturar teclas sem Enter
+    int tempoInicio = time(NULL);
+    int tecla;
+    bool faseCompleta = false;
+
+    while (!faseCompleta) {
+        exibirLabirinto(labirinto);
+        
+        tecla = getchar(); // Captura a entrada do usuário
+        moverJogador(labirinto, &x, &y, tecla);
+
+        if (x == saidaX && y == saidaY) {
+            printf("Você encontrou a saída na fase %d!\n", fase);
+            faseCompleta = true;
+        }
+    }
+
+    configurarTerminal(0); // Restaura o terminal para o modo original
+
+    int tempoFim = time(NULL);
+    int tempoDecorrido = tempoFim - tempoInicio;
+
+    printf("Parabéns! Você completou a fase %d em %d segundos!\n", fase, tempoDecorrido);
+    sleep(2);
+
+    return tempoDecorrido;
 }

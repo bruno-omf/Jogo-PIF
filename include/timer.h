@@ -1,19 +1,6 @@
-/**
- * timer.h
- * Created on Aug, 23th 2023
- * Author: Tiago Barros
- * Based on "From C to C++ course - 2002"
-*/
+#ifndef TIMER_H
+#define TIMER_H
 
-void timerInit(int valueMilliSec);
+int calcularTempoDecorrido(int tempoInicio);
 
-void timerDestroy();
-
-void timerUpdateTimer(int valueMilliSec);
-
-int timerTimeOver();
-
-void timerPrint();
-
-int getTimeDiff();  // Declaração da função para obter a diferença de tempo em milissegundos
-
+#endif // TIMER_H

@@ -1,45 +1,30 @@
 #include <stdio.h>
 #include <string.h>
-#include "ranking.h"
-#include "jogo.h"
+#include "screen.h"
+#include "keyboard.h"
+#include "timer.h"
+
+#define MAX_NOME 50
 
 int main() {
     char nomeJogador[MAX_NOME];
     int tempoTotal = 0;
 
-    // Inicializa o ranking antes de começar o jogo
-    inicializarRanking();
-
-    printf("Bem-vindo ao Labirinto!!\n\n");
-    
-    // Exibe o ranking atual antes de pedir o nome do jogador
-    exibirRanking();
-
-    printf("\nDigite seu nome para iniciar: ");
+    printf("Bem-vindo ao Labirinto!\n\n");
+    printf("Digite seu nome para iniciar: ");
     fgets(nomeJogador, MAX_NOME, stdin);
     nomeJogador[strcspn(nomeJogador, "\n")] = '\0';
 
-    Jogador jogadorAtual;
-    strcpy(jogadorAtual.nome, nomeJogador);
-
-    // Inicia o jogo e soma os tempos das fases
     printf("\nFase 1:\n");
-    tempoTotal += executarFase(1);
+    tempoTotal += executarFase(1);  // Executa a fase 1 e acumula o tempo
 
     printf("Fase 2:\n");
-    tempoTotal += executarFase(2);
+    tempoTotal += executarFase(2);  // Executa a fase 2 e acumula o tempo
 
     printf("Fase 3:\n");
-    tempoTotal += executarFase(3);
+    tempoTotal += executarFase(3);  // Executa a fase 3 e acumula o tempo
 
-    // Atualiza o tempo total do jogador e insere no ranking
-    jogadorAtual.tempo = tempoTotal;
-    atualizarRanking(jogadorAtual);
-
-    printf("\nParabéns, %s! Você completou o jogo em %d segundos!\n", jogadorAtual.nome, tempoTotal);
-
-    // Exibe o ranking atualizado ao final do jogo
-    exibirRanking();
+    printf("\nParabéns, %s! Você completou o jogo em %d segundos!\n", nomeJogador, tempoTotal);
 
     return 0;
 }
