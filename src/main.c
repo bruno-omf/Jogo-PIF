@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include "screen.h"
@@ -28,13 +27,11 @@ int playerX = 1, playerY = 1;
 
 // Função para desenhar o labirinto
 void desenhaLabirinto() {
-    int startX = (MAXX - COLS) / 2; // Centraliza horizontalmente
-    int startY = (MAXY - ROWS) / 2; // Centraliza verticalmente
-
     screenClear();
+    screenInit(1);
     for (int i = 0; i < ROWS; i++) {
         for (int j = 0; j < COLS; j++) {
-            screenGotoxy(startX + j + 1, startY + i + 1); // Adiciona o deslocamento
+            screenGotoxy(j + 1, i + 1); // +1 porque as coordenadas da tela comaddeçam em 1
             if (labirinto[i][j] == '#') {
                 screenSetColor(WHITE, BLACK);
             } else if (labirinto[i][j] == 'J') {
@@ -57,12 +54,12 @@ void moveJogador(int dx, int dy) {
 
     // Verifica se a nova posição é válida
     if (labirinto[newY][newX] == ' ' || labirinto[newY][newX] == 'S') {
-        // Verifica se a nova posição é um espaço vazio ou a saída
+        // Verifica se a nova posição é a saída antes de atualizar o jogador
         if (labirinto[newY][newX] == 'S') {
-            labirinto[playerY][playerX] = ' ';
+            labirinto[playerY][playerX] = ' '; // Remove o jogador da posição atual
             playerX = newX;
             playerY = newY;
-            return; // Sai da função    
+            return; // Sai da função; o jogo será encerrado no loop principal
         }
 
         // Atualiza a posição do jogador
@@ -72,6 +69,7 @@ void moveJogador(int dx, int dy) {
         labirinto[playerY][playerX] = 'J';
     }
 }
+
 
 // Função principal
 int main() {
@@ -86,9 +84,11 @@ int main() {
     while (1) {
         // Checa se o jogador chegou à saída
         if (labirinto[playerY][playerX] == 'S') {
-            screenGotoxy(1, ROWS + 2);
+            screenClear();
+            screenInit(1);
+            screenGotoxy(1, 1);
             screenSetColor(YELLOW, BLACK);
-            printf("Parabéns! Você venceu o jogo!!!!!!!!!!!!!\n");
+            printf("Parabéns! Você venceu o jogo!!!!!!\n");
             screenUpdate();
             break;
         }
