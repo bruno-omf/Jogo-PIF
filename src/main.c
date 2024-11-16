@@ -3,7 +3,7 @@
 #include "screen.h"
 #include "keyboard.h"
 #include "timer.h"
-#include "ranking.h" // Inclui o sistema de ranking
+#include "ranking.h"
 
 // Dimensões do labirinto
 #define ROWS 15
@@ -56,6 +56,14 @@ void desenhaLabirinto() {
     screenUpdate();
 }
 
+// Função para exibir o ranking com pausa
+void exibirRankingComPausa(Jogador ranking[], int numJogadores) {
+    screenClear();
+    exibirRanking(ranking, numJogadores);
+    printf("\nPressione qualquer tecla para continuar...\n");
+    getchar();
+}
+
 // Função para mover o jogador
 void moveJogador(int dx, int dy) {
     int newX = playerX + dx;
@@ -75,17 +83,17 @@ void moveJogador(int dx, int dy) {
         labirinto[playerY][playerX] = ' ';
         playerX = newX;
         playerY = newY;
-        labirinto[playerY][playerX] = 'J';
+        labirinto[playerY][newX] = 'J';
     }
 }
 
 // Função principal
 int main() {
-    static int ch;
     char nome[50];
     Jogador ranking[MAX_JOGADORES];
     int numJogadores = 0;
     int tempoJogo;
+    int venceu = 0;
 
     // Leitura do ranking do arquivo
     lerRanking(ranking, &numJogadores);
@@ -95,11 +103,8 @@ int main() {
     fgets(nome, 50, stdin);
     nome[strcspn(nome, "\n")] = '\0'; // Remove o caractere de nova linha
 
-    // Exibe o ranking atual
-    screenClear();
-    exibirRanking(ranking, numJogadores);
-    timerInit(5000); // Exibe por 5 segundos
-    while (!timerTimeOver());
+    // Exibe o ranking antes do jogo começar
+    exibirRankingComPausa(ranking, numJogadores);
 
     // Inicializa o labirinto
     screenInit(1);     // Inicializa a tela com bordas
@@ -117,12 +122,17 @@ int main() {
             screenSetColor(YELLOW, BLACK);
             printf("Parabéns! Você venceu o jogo em %d segundos!\n", tempoJogo);
             screenUpdate();
+            venceu = 1;
+
+            // Atualiza e salva o ranking
+            atualizarRanking(ranking, &numJogadores, nome, tempoJogo);
+            salvarRanking(ranking, numJogadores);
             break;
         }
 
         // Captura a entrada do teclado
         if (keyhit()) {
-            ch = readch();
+            int ch = readch();
             if (ch == 27) { // ESC para sair do jogo
                 break;
             }
@@ -136,9 +146,10 @@ int main() {
         }
     }
 
-    // Atualiza e salva o ranking
-    atualizarRanking(ranking, &numJogadores, nome, tempoJogo);
-    salvarRanking(ranking, numJogadores);
+    // Exibe o ranking final, se o jogador venceu
+    if (venceu) {
+        exibirRankingComPausa(ranking, numJogadores);
+    }
 
     keyboardDestroy(); // Restaura o teclado
 
