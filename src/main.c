@@ -5,21 +5,26 @@
 #include "timer.h"
 
 // Dimensões do labirinto
-#define ROWS 10
-#define COLS 20
+#define ROWS 15
+#define COLS 45
 
 // Representação do labirinto
 char labirinto[ROWS][COLS] = {
-    "###################",
-    "#J               S#",
-    "# ####  #  ####   #",
-    "# #     #     #   #",
-    "# #  #####  ###   #",
-    "# #        ####   #",
-    "# #######     #   #",
-    "#       #######   #",
-    "#           #     #",
-    "###################"
+    "#############################################",
+    "#      #      #     #   ### # ## ##   ###   #",
+    "###### # #### ## ##  ## ##   ## # #   #     #",
+    "#    # # #  #    #   #  #### ## ### # #     #",
+    "#        #  ######## #  #  #   # ##   ## ####",
+    "#    #####       ##  #       # ## # ###     #",
+    "# #### #    ### #### # # ### ##  ## #       #",
+    "#      # ##   #        #  ##  # ##  #  #  ###",
+    "### ####    # ### ## ## #  #  #  ## #  ##   #",
+    "##       #  # #      ## #### ##### # ##     #",
+    "# ###### ## # ##   # #     #   #      ##### #",
+    "#      ###  # #  ### # # ### #   # #        #",
+    "#####  # # ##   #  # # #     ### ######  ## #",
+    "#        #  ###   ###  ####    #            S",
+    "#############################################"
 };
 
 // Posição inicial do jogador
@@ -27,11 +32,14 @@ int playerX = 1, playerY = 1;
 
 // Função para desenhar o labirinto
 void desenhaLabirinto() {
+    int startX = (MAXX - COLS) / 2; // Centraliza horizontalmente
+    int startY = (MAXY - ROWS) / 2; // Centraliza verticalmente
+
     screenClear();
-    screenInit(1);
+    screenInit(1); // Reexibe as bordas
     for (int i = 0; i < ROWS; i++) {
         for (int j = 0; j < COLS; j++) {
-            screenGotoxy(j + 1, i + 1); // +1 porque as coordenadas da tela comaddeçam em 1
+            screenGotoxy(startX + j + 1, startY + i + 1); // Adiciona o deslocamento
             if (labirinto[i][j] == '#') {
                 screenSetColor(WHITE, BLACK);
             } else if (labirinto[i][j] == 'J') {
@@ -70,7 +78,6 @@ void moveJogador(int dx, int dy) {
     }
 }
 
-
 // Função principal
 int main() {
     static int ch;
@@ -84,9 +91,8 @@ int main() {
     while (1) {
         // Checa se o jogador chegou à saída
         if (labirinto[playerY][playerX] == 'S') {
-            screenClear();
-            screenInit(1);
-            screenGotoxy(1, 1);
+            // Centraliza a mensagem de sucesso
+            screenGotoxy((MAXX - 30) / 2, MAXY - 2);
             screenSetColor(YELLOW, BLACK);
             printf("Parabéns! Você venceu o jogo!!!!!!\n");
             screenUpdate();
@@ -110,7 +116,6 @@ int main() {
     }
 
     keyboardDestroy(); // Restaura o teclado
-    //screenDestroy();   // Restaura a tela
 
     return 0;
 }
