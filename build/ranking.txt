@@ -1,2 +1,6 @@
+joao2:19
+joao 2:26
+hugo:31
 joao:33
+MARCELO:57
 Bruno:65

@@ -1,4 +1,5 @@
 #include "ranking.h"
+#include "screen.h"
 
 // Função para ler o ranking do arquivo
 void lerRanking(Jogador ranking[], int *numJogadores) {
@@ -36,6 +37,7 @@ void salvarRanking(Jogador ranking[], int numJogadores) {
 
 // Função para exibir o ranking no terminal
 void exibirRanking(Jogador ranking[], int numJogadores) {
+    screenSetColor(YELLOW, BLACK);
     printf("RANKING:\n");
     for (int i = 0; i < numJogadores; i++) {
         printf("%d. %s - %ds\n", i + 1, ranking[i].nome, ranking[i].tempo);

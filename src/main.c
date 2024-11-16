@@ -104,19 +104,34 @@ int main() {
     // Inicializa o labirinto
     screenInit(1);     // Inicializa a tela com bordas
     keyboardInit();    // Inicializa o teclado
-    timerInit(50);     // Inicializa o timer para o jogo
-    desenhaLabirinto();
     timerInit(0);      // Inicia o cronômetro do jogo
+    desenhaLabirinto();
 
     // Loop principal do jogo
     while (1) {
         // Checa se o jogador chegou à saída
         if (labirinto[playerY][playerX] == 'S') {
             tempoJogo = getTimeDiff() / 1000; // Calcula o tempo em segundos
+
+            // Exibe a mensagem de vitória
             screenGotoxy((MAXX - 30) / 2, MAXY - 2);
             screenSetColor(YELLOW, BLACK);
             printf("Parabéns! Você venceu o jogo em %d segundos!\n", tempoJogo);
             screenUpdate();
+
+            // Atualiza e salva o ranking
+            atualizarRanking(ranking, &numJogadores, nome, tempoJogo);
+            salvarRanking(ranking, numJogadores);
+
+            // Exibe o ranking atualizado
+            screenClear();
+            exibirRanking(ranking, numJogadores);
+
+            // Aguarda 5 segundos
+            timerInit(5000);
+            while (!timerTimeOver());
+
+            // Sai do jogo
             break;
         }
 
@@ -135,10 +150,6 @@ int main() {
             desenhaLabirinto();
         }
     }
-
-    // Atualiza e salva o ranking
-    atualizarRanking(ranking, &numJogadores, nome, tempoJogo);
-    salvarRanking(ranking, numJogadores);
 
     keyboardDestroy(); // Restaura o teclado
 
