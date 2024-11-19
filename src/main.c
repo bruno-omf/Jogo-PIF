@@ -136,18 +136,18 @@ int main() {
                 break;
             }
             switch (ch) {
-                case 119: // 'w' minuculo
-                case 87:  // 'W' maiusculo
-                    moveJogador(0, -1); break; // Move para cima
-                case 115: // 's' minuculo
-                case 83:  // 'S' maiusculo
-                    moveJogador(0, 1); break;  // Move para baixo
-                case 97:  // 'a' minuculo
-                case 65:  // 'A' maiusculo
-                    moveJogador(-1, 0); break; // Move para esquerda
-                case 100: // 'd' minuculo
-                case 68:  // 'D' maiusculo
-                    moveJogador(1, 0); break;  // Move para direita
+                case 119: 
+                case 87:  
+                    moveJogador(0, -1); break; 
+                case 115: 
+                case 83:  
+                    moveJogador(0, 1); break;  
+                case 97: 
+                case 65:  
+                    moveJogador(-1, 0); break;
+                case 100: 
+                case 68:  
+                    moveJogador(1, 0); break;  
             }
             desenhaLabirinto();
         }
