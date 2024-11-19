@@ -1,30 +1,88 @@
-#include <stdio.h>
+/**
+ * main.h
+ * Created on Aug, 23th 2023
+ * Author: Tiago Barros
+ * Based on "From C to C++ course - 2002"
+*/
+
 #include <string.h>
+
 #include "screen.h"
 #include "keyboard.h"
 #include "timer.h"
 
-#define MAX_NOME 50
+int x = 34, y = 12;
+int incX = 1, incY = 1;
 
-int main() {
-    char nomeJogador[MAX_NOME];
-    int tempoTotal = 0;
+void printHello(int nextX, int nextY)
+{
+    screenSetColor(CYAN, DARKGRAY);
+    screenGotoxy(x, y);
+    printf("           ");
+    x = nextX;
+    y = nextY;
+    screenGotoxy(x, y);
+    printf("Hello World");
+}
 
-    printf("Bem-vindo ao Labirinto!\n\n");
-    printf("Digite seu nome para iniciar: ");
-    fgets(nomeJogador, MAX_NOME, stdin);
-    nomeJogador[strcspn(nomeJogador, "\n")] = '\0';
+void printKey(int ch)
+{
+    screenSetColor(YELLOW, DARKGRAY);
+    screenGotoxy(35, 22);
+    printf("Key code :");
 
-    printf("\nFase 1:\n");
-    tempoTotal += executarFase(1);  // Executa a fase 1 e acumula o tempo
+    screenGotoxy(34, 23);
+    printf("            ");
+    
+    if (ch == 27) screenGotoxy(36, 23);
+    else screenGotoxy(39, 23);
 
-    printf("Fase 2:\n");
-    tempoTotal += executarFase(2);  // Executa a fase 2 e acumula o tempo
+    printf("%d ", ch);
+    while (keyhit())
+    {
+        printf("%d ", readch());
+    }
+}
 
-    printf("Fase 3:\n");
-    tempoTotal += executarFase(3);  // Executa a fase 3 e acumula o tempo
+int main() 
+{
+    static int ch = 0;
 
-    printf("\nParabéns, %s! Você completou o jogo em %d segundos!\n", nomeJogador, tempoTotal);
+    screenInit(1);
+    keyboardInit();
+    timerInit(50);
+
+    printHello(x, y);
+    screenUpdate();
+
+    while (ch != 10) //enter
+    {
+        // Handle user input
+        if (keyhit()) 
+        {
+            ch = readch();
+            printKey(ch);
+            screenUpdate();
+        }
+
+        // Update game state (move elements, verify collision, etc)
+        if (timerTimeOver() == 1)
+        {
+            int newX = x + incX;
+            if (newX >= (MAXX -strlen("Hello World") -1) || newX <= MINX+1) incX = -incX;
+            int newY = y + incY;
+            if (newY >= MAXY-1 || newY <= MINY+1) incY = -incY;
+
+            printKey(ch);
+            printHello(newX, newY);
+
+            screenUpdate();
+        }
+    }
+
+    keyboardDestroy();
+    screenDestroy();
+    timerDestroy();
 
     return 0;
 }

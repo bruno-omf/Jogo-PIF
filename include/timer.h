@@ -1,6 +1,16 @@
-#ifndef TIMER_H
-#define TIMER_H
+/**
+ * timer.h
+ * Created on Aug, 23th 2023
+ * Author: Tiago Barros
+ * Based on "From C to C++ course - 2002"
+*/
 
-int calcularTempoDecorrido(int tempoInicio);
+void timerInit(int valueMilliSec);
 
-#endif // TIMER_H
+void timerDestroy();
+
+void timerUpdateTimer(int valueMilliSec);
+
+int timerTimeOver();
+
+void timerPrint();
