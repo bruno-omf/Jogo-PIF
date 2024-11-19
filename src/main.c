@@ -36,11 +36,12 @@ void desenhaLabirinto() {
     int startX = (MAXX - COLS) / 2; // Centraliza horizontalmente
     int startY = (MAXY - ROWS) / 2; // Centraliza verticalmente
 
-    screenClear();
+    screenClear(); // Limpa resquicios de caracteres anteriores
     screenInit(1); // Reexibe as bordas
-    for (int i = 0; i < ROWS; i++) {
+
+    for (int i = 0; i < ROWS; i++) { // Loop que desenha o labirinto
         for (int j = 0; j < COLS; j++) {
-            screenGotoxy(startX + j + 1, startY + i + 1); // Adiciona o deslocamento
+            screenGotoxy(startX + j + 1, startY + i + 1); // Mover o cursor para a posição correta onde o caractere será exibido
             if (labirinto[i][j] == '#') {
                 screenSetColor(WHITE, BLACK);
             } else if (labirinto[i][j] == 'J') {
@@ -53,7 +54,7 @@ void desenhaLabirinto() {
             printf("%c", labirinto[i][j]);
         }
     }
-    screenUpdate();
+    screenUpdate(); // Atualiza a tela para exibir as mudanças
 }
 
 // Função para mover o jogador
@@ -142,10 +143,18 @@ int main() {
                 break;
             }
             switch (ch) {
-                case 'w': moveJogador(0, -1); break; // Move para cima
-                case 's': moveJogador(0, 1); break;  // Move para baixo
-                case 'a': moveJogador(-1, 0); break; // Move para esquerda
-                case 'd': moveJogador(1, 0); break;  // Move para direita
+                case 119: // 'w' minuculo
+                case 87:  // 'W' maiusculo
+                    moveJogador(0, -1); break; // Move para cima
+                case 115: // 's' minuculo
+                case 83:  // 'S' maiusculo
+                    moveJogador(0, 1); break;  // Move para baixo
+                case 97:  // 'a' minuculo
+                case 65:  // 'A' maiusculo
+                    moveJogador(-1, 0); break; // Move para esquerda
+                case 100: // 'd' minuculo
+                case 68:  // 'D' maiusculo
+                    moveJogador(1, 0); break;  // Move para direita
             }
             desenhaLabirinto();
         }
