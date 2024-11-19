@@ -16,11 +16,7 @@ Este é um jogo de labirinto para um jogador onde o objetivo é atravessar um la
 
 - **Regras:**  
   - O jogador deve encontrar o caminho até o final do labirinto o mais rápido possível.
-  - O tempo de cada fase é registrado e exibido ao jogador ao completar o labirinto.
-
-- **Fases e Dificuldade:**
-  - O jogo possui múltiplas fases, cada uma com um layout de labirinto específico.
-  - A dificuldade aumenta conforme o jogador avança, com labirintos mais complexos.
+  - O tempo que leva para terminar a fase é registrado e exibido ao jogador em um ranking ao completar o jogo.
 
 ## 👨‍💻 Desenvolvedores  
 
