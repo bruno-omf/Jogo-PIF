@@ -3,13 +3,10 @@
 #include "screen.h"
 #include "keyboard.h"
 #include "timer.h"
-#include "ranking.h" // Inclui o sistema de ranking
-
-// Dimensões do labirinto
+#include "ranking.h" 
 #define ROWS 15
 #define COLS 45
 
-// Representação do labirinto
 char labirinto[ROWS][COLS] = {
     "#############################################",
     "#      #      #     #   ### # ## ##   ###   #",
@@ -28,20 +25,18 @@ char labirinto[ROWS][COLS] = {
     "#############################################"
 };
 
-// Posição inicial do jogador
 int playerX = 1, playerY = 1;
 
-// Função para desenhar o labirinto
 void desenhaLabirinto() {
-    int startX = (MAXX - COLS) / 2; // Centraliza horizontalmente
-    int startY = (MAXY - ROWS) / 2; // Centraliza verticalmente
+    int startX = (MAXX - COLS) / 2; 
+    int startY = (MAXY - ROWS) / 2; 
 
-    screenClear(); // Limpa resquicios de caracteres anteriores
-    screenInit(1); // Reexibe as bordas
+    screenClear(); 
+    screenInit(1);
 
-    for (int i = 0; i < ROWS; i++) { // Loop que desenha o labirinto
+    for (int i = 0; i < ROWS; i++) { 
         for (int j = 0; j < COLS; j++) {
-            screenGotoxy(startX + j + 1, startY + i + 1); // Mover o cursor para a posição correta onde o caractere será exibido
+            screenGotoxy(startX + j + 1, startY + i + 1); 
             if (labirinto[i][j] == '#') {
                 screenSetColor(WHITE, BLACK);
             } else if (labirinto[i][j] == 'J') {
@@ -54,25 +49,24 @@ void desenhaLabirinto() {
             printf("%c", labirinto[i][j]);
         }
     }
-    screenUpdate(); // Atualiza a tela para exibir as mudanças
+    screenUpdate(); 
 }
 
-// Função para mover o jogador
+
 void moveJogador(int dx, int dy) {
     int newX = playerX + dx;
     int newY = playerY + dy;
 
-    // Verifica se a nova posição é válida
     if (labirinto[newY][newX] == ' ' || labirinto[newY][newX] == 'S') {
-        // Verifica se a nova posição é a saída antes de atualizar o jogador
+       
         if (labirinto[newY][newX] == 'S') {
-            labirinto[playerY][playerX] = ' '; // Remove o jogador da posição atual
+            labirinto[playerY][playerX] = ' '; 
             playerX = newX;
             playerY = newY;
-            return; // Sai da função; o jogo será encerrado no loop principal
+            return; 
         }
 
-        // Atualiza a posição do jogador
+       
         labirinto[playerY][playerX] = ' ';
         playerX = newX;
         playerY = newY;
@@ -80,7 +74,7 @@ void moveJogador(int dx, int dy) {
     }
 }
 
-// Função principal
+
 int main() {
     static int ch;
     char nome[50];
@@ -88,58 +82,57 @@ int main() {
     int numJogadores = 0;
     int tempoJogo;
 
-    // Leitura do ranking do arquivo
+ 
     lerRanking(ranking, &numJogadores);
 
-    // Solicita o nome do jogador
+   
     printf("Digite seu nome: ");
     fgets(nome, 50, stdin);
-    nome[strcspn(nome, "\n")] = '\0'; // Remove o caractere de nova linha
+    nome[strcspn(nome, "\n")] = '\0'; 
 
-    // Exibe o ranking atual
+ 
     screenClear();
     exibirRanking(ranking, numJogadores);
-    timerInit(5000); // Exibe por 5 segundos
+    timerInit(5000); 
     while (!timerTimeOver());
 
-    // Inicializa o labirinto
-    screenInit(1);     // Inicializa a tela com bordas
-    keyboardInit();    // Inicializa o teclado
-    timerInit(0);      // Inicia o cronômetro do jogo
+   
+    screenInit(1);    
+    keyboardInit(); 
+    timerInit(0); 
     desenhaLabirinto();
 
-    // Loop principal do jogo
+   
     while (1) {
-        // Checa se o jogador chegou à saída
+       
         if (labirinto[playerY][playerX] == 'S') {
-            tempoJogo = getTimeDiff() / 1000; // Calcula o tempo em segundos
+            tempoJogo = getTimeDiff() / 1000;
 
-            // Exibe a mensagem de vitória
+            
             screenGotoxy((MAXX - 30) / 2, MAXY - 2);
             screenSetColor(YELLOW, BLACK);
             printf("Parabéns! Você venceu o jogo em %d segundos!\n", tempoJogo);
             screenUpdate();
 
-            // Atualiza e salva o ranking
             atualizarRanking(ranking, &numJogadores, nome, tempoJogo);
             salvarRanking(ranking, numJogadores);
 
-            // Exibe o ranking atualizado
+
             screenClear();
             exibirRanking(ranking, numJogadores);
 
-            // Aguarda 5 segundos
+            
             timerInit(5000);
             while (!timerTimeOver());
 
-            // Sai do jogo
+           
             break;
         }
 
-        // Captura a entrada do teclado
+
         if (keyhit()) {
             ch = readch();
-            if (ch == 27) { // ESC para sair do jogo
+            if (ch == 27) { 
                 break;
             }
             switch (ch) {
@@ -160,7 +153,6 @@ int main() {
         }
     }
 
-    keyboardDestroy(); // Restaura o teclado
-
+    keyboardDestroy(); 
     return 0;
 }
