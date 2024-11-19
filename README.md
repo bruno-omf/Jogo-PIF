@@ -63,10 +63,17 @@ Para executar o jogo de labirinto, siga os passos abaixo para clonar o repositó
    git clone https://github.com/seu-usuario/JOGO-PIF.git
    cd JOGO-PIF
    code .
-2. **Compilar o Código**
-Antes de rodar o jogo, é necessário compilar o código fonte. Certifique-se de ter um compilador C instalado.
+   ```
 
-3. **Executar o Jogo**
+2. **Acessar pasta**
+Antes de rodar o jogo, é necessário compilar o código fonte. Certifique-se de ter um compilador C instalado.
+```
+ cd JOGO-PIF
+   code .
+```
+
+
+4. **Executar o Jogo**
 Agora que o código está compilado, você pode iniciar o jogo com o seguinte comando:
 ```
 make run
