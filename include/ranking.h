@@ -12,7 +12,7 @@ struct {
 } typedef Jogador;
 
 // Constantes
-#define MAX_JOGADORES 10  
+#define MAX_JOGADORES 20  
 #define RANKING_FILE "ranking.txt" 
 
 

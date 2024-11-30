@@ -1,7 +1,3 @@
-BAUDEL:14
-bruno:20
-Luis:22
-Luis:24
-maria:47
-BLOCK:56
-Malu:105
+maria:15
+malu albuquerque:21
+heitor:59
