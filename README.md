@@ -21,8 +21,8 @@ Este é um jogo de labirinto para um jogador onde o objetivo é encontrar a saí
 
 **Bruno Oliveira**
 
-- @Bruno-of
-- [GitHub](https://github.com/Bruno-of)  
+- @bruno-omf
+- [GitHub](https://github.com/Bruno-omf)  
 - [LinkedIn](https://www.linkedin.com/in/bruno-oliveira-me/overlay/about-this-profile/?lipi=urn%3Ali%3Apage%3Ad_flagship3_profile_view_base%3B3vOv%2FgQhSWadj7F3Eboumw%3D%3D)  
 
 **Luis Filipe Brigido** 
